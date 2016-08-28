@@ -2,6 +2,7 @@
 #define __FACE_DETECT_SHAPE_REGRESSOR_H__
 
 #import <Foundation/Foundation.h>
+#import <Frame.h>
 
 class ShapeRegressor;
 
@@ -11,6 +12,8 @@ class ShapeRegressor;
 }
 
 - (id)initWithModelFromPath:(NSString *)modelPath;
+
+- (NSArray *)predictFrame:(Frame *)frame withFaceRect:(NSRect)rect;
 
 @end
 

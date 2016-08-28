@@ -773,9 +773,6 @@ double calculate_covariance(const vector<double>& v_1,
     return mean(v1.mul(v2))[0]; 
 }
 
-
-
-
 @implementation ShapeRegressorWrapper
 
 - (id)initWithModelFromPath:(NSString *)modelPath
@@ -787,6 +784,35 @@ double calculate_covariance(const vector<double>& v_1,
 
     return self;
 }
+
+- (NSArray *)predictFrame:(Frame *)frame withFaceRect:(NSRect)rect
+{
+    int initial_number = 20;
+
+    Mat frameImage(frame.cvSourceImage, false);
+    BoundingBox bb;
+    bb.start_x = rect.origin.x;
+    bb.start_y = rect.origin.y;
+    bb.width = rect.size.width;
+    bb.height = rect.size.height;
+    bb.centroid_x = bb.start_x + bb.width/2.0;
+    bb.centroid_y = bb.start_y + bb.height/2.0;
+
+    Mat_<double> current_shape = _cppRegressor->Predict(frameImage, bb, initial_number);
+
+    int nLandmarks = 29;
+    NSMutableArray *landmarksArray
+        = [[NSMutableArray alloc] initWithCapacity:nLandmarks];
+    for (int i = 0; i < nLandmarks; i++) {
+        NSPoint landmarkPoint = {
+            current_shape(i,0), current_shape(i,2)
+        };
+        [landmarksArray addObject:([NSValue valueWithPoint:landmarkPoint])];
+    }
+
+    return landmarksArray;
+}
+
 
 - (void)dealloc
 {
