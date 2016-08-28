@@ -6,5 +6,6 @@
 
 typedef struct _IplImage IplImage;
 struct CvMemStorage;
+struct CvCapture;
 
 #endif // __FACE_DETECT_OPENCV_FORWARD_DECLS_H__

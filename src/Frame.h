@@ -17,6 +17,7 @@
                               *cvGrayImage;
 
 - (id)initWithOpenCVContext:(OpenCVContext *)cvContext withMemory:(const char *)memory withSize:(size_t)size;
+- (id)initWithOpenCVContext:(OpenCVContext *)cvContext withImage:(IplImage *)srcImage;
 - (id)initWithOpenCVContext:(OpenCVContext *)cvContext withPath:(NSString *)filename;
 
 @end

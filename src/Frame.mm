@@ -54,6 +54,17 @@
     return self;
 }
 
+- (id)initWithOpenCVContext:(OpenCVContext *)cvContext withImage:(IplImage *)srcImage
+{
+    self = [super init];
+
+    cvContext_ = cvContext;
+    cvSourceImage_ = srcImage;
+    cvGrayImage_ = [Frame makeGrayImageFrom:cvSourceImage_];
+
+    return self;
+}
+
 - (void)dealloc
 {
     cvReleaseImage(&cvGrayImage_);
