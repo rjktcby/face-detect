@@ -1,3 +1,2 @@
 build/*
 *.sublime*
-src/face-detect.mm
