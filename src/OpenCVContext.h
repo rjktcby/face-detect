@@ -6,6 +6,8 @@
 
 // OpenCVContext - class for common opencv stuff (TBD)
 
+@class Frame;
+
 @interface OpenCVContext : NSObject {
     NSString *openCVPath_, *haarCascadesPath_;
     CvMemStorage *cvStorage_;
@@ -14,7 +16,8 @@
 
 -(id)initWithOpenCVPath:(NSString *)openCVPath;
 
-- (NSArray *)detectObjectsInGrayImage:(IplImage *)cvGrayImage withCascadeName:(NSString *)cascadeName;
+- (NSArray *)detectFacesWithOpenCVInFrame:(Frame *)frame;
+- (NSArray *)detectFacesWithDLibInFrame:(Frame *)frame;
 
 @end
 

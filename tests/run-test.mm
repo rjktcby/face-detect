@@ -1,5 +1,5 @@
-#import <TestCameraCapture.h>
-#import <TestFrameSequence.h>
+#import "TestCameraCapture.h"
+#import "TestFrameSequence.h"
 #import <ShapeRegressor.h>
 
 #import <opencv/cv.h>
@@ -47,9 +47,9 @@ int main (int argc, char **argv)
     while (![test finished]) {
         NSLog(@"Grabbing frame #%d", frame_num);
         Frame *frame = [test nextFrame];
+        // NSArray *frameFaces = [cvContext detectFacesWithOpenCVInFrame:frame];
+        NSArray *frameFaces = [cvContext detectFacesWithDLibInFrame:frame];
 
-        NSArray *frameFaces = [cvContext detectObjectsInGrayImage:frame.cvGrayImage
-                                         withCascadeName:@"haarcascade_frontalface_default.xml"];
         NSLog(@"Found %d frontal faces", [frameFaces count]);
 
         Mat frameImage(frame.cvSourceImage, false);
