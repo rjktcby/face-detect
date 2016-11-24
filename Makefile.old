@@ -1,0 +1,23 @@
+CC=clang++-3.5
+CFLAGS=-ObjC++ --std=c++11
+CFLAGS+=`gnustep-config --objc-flags`
+
+LDFLAGS=-lgnustep-base -lobjc -ldlib -llapack
+LDFLAGS=`pkg-config opencv --libs`
+
+SOURCES=src/Capture.mm src/DlibFaceDetector.mm src/DlibShapePredictor.mm\
+		src/Frame.mm src/OpenCVContext.mm src/ShapeRegressor.mm\
+		tests/TestCameraCapture.mm tests/TestFrameSequence.mm\
+		tests/run-test.mm
+
+VPATH = src
+OBJECTS=$(SOURCES:.mm=.o)
+EXECUTABLE=run-test
+
+all: $(SOURCES) $(EXECUTABLE)
+
+$(EXECUTABLE): $(OBJECTS) 
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+
+%.mm : %.o
+	$(CC) $(CFLAGS) $< -o $@

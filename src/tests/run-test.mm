@@ -1,6 +1,6 @@
 #import "TestCameraCapture.h"
 #import "TestFrameSequence.h"
-#import <ShapeRegressor.h>
+#import <DlibFaceDetector.h>
 
 #import <opencv/cv.h>
 #import <opencv/highgui.h>
@@ -40,39 +40,35 @@ int main (int argc, char **argv)
 
     id test = [[testClass alloc] initWithOpenCVContext:cvContext withArguments:testArgs];
 
-    ShapeRegressorWrapper *regressor
-        = [[ShapeRegressorWrapper alloc] initWithModelFromPath:[NSString stringWithUTF8String:argv[1]]];
+    DlibFaceDetector *faceDetector = [[DlibFaceDetector alloc] initWithOpenCVContext:cvContext];
 
     int frame_num = 0;
     while (![test finished]) {
         NSLog(@"Grabbing frame #%d", frame_num);
         Frame *frame = [test nextFrame];
-        // NSArray *frameFaces = [cvContext detectFacesWithOpenCVInFrame:frame];
-        NSArray *frameFaces = [cvContext detectFacesWithDLibInFrame:frame];
+        NSArray *frameFaces = [faceDetector detectFacesInFrame:frame];
 
-        NSLog(@"Found %d frontal faces", [frameFaces count]);
+        NSLog(@"Found %d frontal faces", int([frameFaces count]));
 
         Mat frameImage(frame.cvSourceImage, false);
         for(int i = 0; i < [frameFaces count]; i++)
         {
             NSRect faceRect = [[frameFaces objectAtIndex:i] rectValue];
 
-            NSArray *landmarks = [regressor predictFrame:frame withFaceRect:faceRect];
+            // line(frameImage,Point2d(faceRect.origin.x, faceRect.origin.y),
+            //     Point2d(faceRect.origin.x+faceRect.size.width, faceRect.origin.y),Scalar(255,0,0));
+            // line(frameImage,Point2d(faceRect.origin.x+faceRect.size.width, faceRect.origin.y),
+            //     Point2d(faceRect.origin.x+faceRect.size.width, faceRect.origin.y+faceRect.size.height),Scalar(255,0,0));
+            // line(frameImage,Point2d(faceRect.origin.x+faceRect.size.width, faceRect.origin.y+faceRect.size.height),
+            //     Point2d(faceRect.origin.x, faceRect.origin.y+faceRect.size.height),Scalar(255,0,0));
+            // line(frameImage,Point2d(faceRect.origin.x, faceRect.origin.y+faceRect.size.height),
+            //     Point2d(faceRect.origin.x, faceRect.origin.y),Scalar(255,0,0));
 
-            line(frameImage,Point2d(faceRect.origin.x, faceRect.origin.y),
-                Point2d(faceRect.origin.x+faceRect.size.width, faceRect.origin.y),Scalar(255,0,0));
-            line(frameImage,Point2d(faceRect.origin.x+faceRect.size.width, faceRect.origin.y),
-                Point2d(faceRect.origin.x+faceRect.size.width, faceRect.origin.y+faceRect.size.height),Scalar(255,0,0));
-            line(frameImage,Point2d(faceRect.origin.x+faceRect.size.width, faceRect.origin.y+faceRect.size.height),
-                Point2d(faceRect.origin.x, faceRect.origin.y+faceRect.size.height),Scalar(255,0,0));
-            line(frameImage,Point2d(faceRect.origin.x, faceRect.origin.y+faceRect.size.height),
-                Point2d(faceRect.origin.x, faceRect.origin.y),Scalar(255,0,0));
-
-            for (int l = 0; l < [landmarks count]; l++) {
-                NSPoint landmarkPoint = [[landmarks objectAtIndex:l] pointValue];
-                circle(frameImage, Point2d(landmarkPoint.x, landmarkPoint.y), 3,
-                       Scalar(255,0,0), -1, 8, 0);
-            }
+            // for (int l = 0; l < [landmarks count]; l++) {
+            //     NSPoint landmarkPoint = [[landmarks objectAtIndex:l] pointValue];
+            //     circle(frameImage, Point2d(landmarkPoint.x, landmarkPoint.y), 3,
+            //            Scalar(255,0,0), -1, 8, 0);
+            // }
         }
 
         cvShowImage([testName UTF8String], frame.cvSourceImage);

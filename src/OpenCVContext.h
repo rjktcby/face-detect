@@ -17,7 +17,6 @@
 -(id)initWithOpenCVPath:(NSString *)openCVPath;
 
 - (NSArray *)detectFacesWithOpenCVInFrame:(Frame *)frame;
-- (NSArray *)detectFacesWithDLibInFrame:(Frame *)frame;
 
 @end
 
